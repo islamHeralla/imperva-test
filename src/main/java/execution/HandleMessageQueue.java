@@ -1,6 +1,5 @@
 package execution;
 
-import core.lib.PrivateScheduledExecutor;
 import org.apache.log4j.Logger;
 import representation.common.Status;
 import representation.message.Message;
@@ -10,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * this class is owning the whole aspects of treating the incoming messages including the mechanism of the retries
  */
-public class HandleMessageQueue extends MessagesManagement implements LifeCycleManagementComponent  {
+public class HandleMessageQueue extends MessagesManagement implements LifeCycleManagementComponent {
 
     private static final Logger logger = Logger.getLogger(HandleMessageQueue.class.getName());
     //the number of threads should be resized as we need
