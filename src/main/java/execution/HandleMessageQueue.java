@@ -13,15 +13,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class HandleMessageQueue extends MessagesManagement implements LifeCycleManagementComponent  {
 
     private static final Logger logger = Logger.getLogger(HandleMessageQueue.class.getName());
-    private static final String LOG_FILTER = " MessageHandler";
-    //the number of threads should ne resized as the we need
-    private static int THREAD_POOL_SIZE = 10;
+    //the number of threads should be resized as we need
     private ConcurrentHashMap<String, Message> inQueueMessages = new ConcurrentHashMap();
-    private PrivateScheduledExecutor privateScheduledExecutor;
 
 
     public HandleMessageQueue() {
-        privateScheduledExecutor = new PrivateScheduledExecutor(THREAD_POOL_SIZE, LOG_FILTER);
+        super();
     }
 
 
@@ -87,15 +84,19 @@ public class HandleMessageQueue extends MessagesManagement implements LifeCycleM
 
         logger.info("message :" + message + "  been added to the queue");
         message.setStatus(Status.NEW_MESSAGE);
-        message.setReceivedTimeStamp(System.currentTimeMillis());
         if (sendMessage(message)) {
             logger.info("Message : " + message + " was sent");
             return;
         }
+        addNewMessageToQueue(message);
+
+
+    }
+
+    private void addNewMessageToQueue(Message message) {
+        message.setReceivedTimeStamp(System.currentTimeMillis());
         message.setStatus(Status.RETRY_SENDING_MESSAGE);
         inQueueMessages.put(message.getId(), message);
-
-
     }
 
 
